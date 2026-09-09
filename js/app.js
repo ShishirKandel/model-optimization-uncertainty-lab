@@ -1,5 +1,7 @@
 import { evaluateController, membership } from "./controller.js";
 import { drawHistory, drawMembership } from "./charts.js";
+import { drawLocation, drawScatter, drawCalibration } from "./lake-visuals.js";
+import { regressionPoints, calibrationBins } from "./diagnostics.js";
 
 const $ = (id) => document.getElementById(id);
 const text = (id, value) => {
@@ -15,6 +17,7 @@ const el = (tag, content, className) => {
   return element;
 };
 let lakeData, currentLake, controllerConfig;
+let nepalOutline = null;
 
 function activateTab(name, focus = false) {
   if (!["lakes", "controller", "evidence"].includes(name)) name = "lakes";
@@ -84,6 +87,7 @@ function filterLakes() {
   if (!visible.length) {
     currentLake = null;
     text("lake-coordinates", "");
+    renderLakeVisuals();
     $("probabilities").replaceChildren(
       el("p", "Select a matching lake to see its probabilities.", "hint"),
     );
@@ -103,6 +107,7 @@ function renderLake() {
     throw new Error(
       "Selected regression model is not available in this record.",
     );
+  renderLakeVisuals();
   text("lake-heading", currentLake.id);
   text("lake-basin", `${currentLake.basin} basin · Nepal`);
   text(
@@ -206,7 +211,18 @@ async function loadLakes() {
       lakeData.lakes[0].forecast.models,
       "svgp-gpr-history-matern32-256",
     );
+    addOptions(
+      $("diagnostic-model-select"),
+      lakeData.lakes[0].forecast.models,
+      $("model-select").value,
+    );
+    addOptions(
+      $("classifier-select"),
+      lakeData.lakes[0].forecast.classifiers,
+      "svgp-gpc-history_physical-matern32-256",
+    );
     filterLakes();
+    renderReliability();
     renderMetrics();
     $("lake-loading").hidden = true;
     $("lake-content").hidden = false;
@@ -376,3 +392,77 @@ $("reset-controller").addEventListener("click", () => {
 });
 loadLakes();
 loadController();
+
+function renderLakeVisuals() {
+  if (!lakeData) return;
+  drawLocation($("location-map"), lakeData.lakes, currentLake, nepalOutline);
+  text(
+    "map-selected-name",
+    currentLake
+      ? `${currentLake.id} | ${currentLake.basin} basin`
+      : "No lake selected",
+  );
+  const id = $("model-select").value;
+  const model = lakeData.lakes[0].forecast.models.find(
+    (item) => item.id === id,
+  );
+  if (!model) return;
+  $("diagnostic-model-select").value = id;
+  text("scatter-model-name", model.name);
+  const points = regressionPoints(lakeData.lakes, id);
+  drawScatter(
+    $("scatter-chart"),
+    points,
+    currentLake?.id,
+    model.name,
+    $("scatter-scale").value,
+  );
+  const largest = Math.max(...points.map((point) => point.predicted));
+  text(
+    "scatter-outlier-note",
+    `Largest predicted increase: ${pct(largest, 1)}. This point is retained on both axis scales.`,
+  );
+}
+function renderReliability() {
+  if (!lakeData) return;
+  const id = $("classifier-select").value;
+  const classifier = lakeData.lakes[0].forecast.classifiers.find(
+    (item) => item.id === id,
+  );
+  if (!classifier) return;
+  const bins = calibrationBins(lakeData.lakes, id);
+  drawCalibration($("calibration-chart"), bins, classifier.name);
+  $("calibration-bins").replaceChildren(
+    ...bins.map((bin) => {
+      const row = el("tr");
+      [
+        `${pct(bin.lower, 0)} to ${pct(bin.upper, 0)}`,
+        String(bin.count),
+        pct(bin.meanProbability),
+        pct(bin.observedFrequency),
+      ].forEach((value) => row.append(el("td", value)));
+      return row;
+    }),
+  );
+}
+async function loadOutline() {
+  try {
+    const response = await fetch("data/nepal.geojson");
+    if (!response.ok) throw new Error("Map outline unavailable");
+    nepalOutline = await response.json();
+  } catch {
+    text(
+      "map-note",
+      "Outline unavailable. Lake coordinates are still shown; forecasts are unaffected.",
+    );
+  }
+  renderLakeVisuals();
+}
+$("diagnostic-model-select").addEventListener("change", () => {
+  $("model-select").value = $("diagnostic-model-select").value;
+  if (currentLake) renderLake();
+  else renderLakeVisuals();
+});
+$("scatter-scale").addEventListener("change", renderLakeVisuals);
+$("classifier-select").addEventListener("change", renderReliability);
+loadOutline();

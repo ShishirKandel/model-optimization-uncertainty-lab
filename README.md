@@ -6,7 +6,7 @@ An interactive companion to STW7085CEM Advanced Machine Learning coursework by S
 
 ## Explore
 
-- **Lake forecasts:** browse 478 Nepal lakes from the sealed 2024 evaluation, compare five regression models with nominal 90% prediction intervals, and inspect three separately labelled expansion classifiers. Filter by basin or lake ID; download an individual record.
+- **Lake forecasts:** browse 478 Nepal lakes from the sealed 2024 evaluation, compare five regression models with nominal 90% prediction intervals, and inspect three separately labelled expansion classifiers. Filter by basin or lake ID; locate the selected lake on a Nepal map, compare predicted versus observed change, inspect probability reliability, or download an individual record.
 - **Room controller:** adjust temperature error and outdoor temperature, try presets or a manual override, and inspect the manual Mamdani controller's command, output aggregation and active rules.
 - **About & evidence:** meet the research team in author order, examine provenance and download the exported lake dataset. The combined written report is submitted separately and is not published here.
 
@@ -72,3 +72,11 @@ tools/                     Local server and workspace export scripts
 GitHub Pages serves the repository root on `main`. All runtime assets are local; there are no API keys, accounts, analytics or runtime CDNs.
 
 No report PDFs, report source files or report archives are included in this repository or its published history.
+
+## Additional visual diagnostics
+
+The Nepal outline is extracted from a pinned Natural Earth 1:50m Admin 0 dataset (public domain); source URL and SHA-256 are included in `data/nepal.geojson`. Regenerate it with `python tools/export_nepal.py` (network access required).
+
+The scatter plot includes every evaluated lake and uses the selected regression model. Both axes share one scale; switching models may change the range. Optional symmetric-log axes use sign(x) \* log(1 + abs(x)/0.1) on proportional fractions and label ticks as percentages. Large outliers are never removed.
+
+Reliability uses ten equal-width probability bins, includes probability 1 in the final bin, and labels expansion as actual proportional change greater than zero. Empty bins are omitted; marker area is proportional to count above a minimum visible size. This is a descriptive held-out diagnostic, not recalibration or a guarantee of reliable probabilities.

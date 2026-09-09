@@ -206,6 +206,32 @@
               </details>
             </div>
           </div>
+          <section class="location-section" aria-labelledby="location-title">
+            <div class="location-copy">
+              <h3 id="location-title">Where is this lake?</h3>
+              <p>
+                All 478 evaluated lakes, coloured by river basin. The outlined
+                point follows your lake selection above.
+              </p>
+              <p id="map-selected-name" class="selected-location"></p>
+              <div class="map-legend">
+                <span><i class="basin-dot karnali"></i>Karnali</span
+                ><span><i class="basin-dot gandaki"></i>Gandaki</span
+                ><span><i class="basin-dot koshi"></i>Koshi</span>
+              </div>
+              <p id="map-note" class="hint">
+                Generalised national outline from
+                <a
+                  href="https://www.naturalearthdata.com/"
+                  target="_blank"
+                  rel="noopener"
+                  >Natural Earth</a
+                >
+                (public domain).
+              </p>
+            </div>
+            <div id="location-map" class="chart location-map"></div>
+          </section>
           <section
             class="classification-section"
             aria-labelledby="classification-title"
@@ -225,6 +251,76 @@
               </p>
             </div>
             <div id="probabilities" class="probability-list"></div>
+          </section>
+          <section class="diagnostics-section" aria-label="Model diagnostics">
+            <div class="diagnostic-panel">
+              <h3>How close were the predictions?</h3>
+              <p class="hint">
+                Each dot is a lake. The dashed diagonal represents a perfect
+                prediction; the orange ring marks your selected lake.
+              </p>
+              <div class="diagnostic-controls">
+                <div class="field">
+                  <label for="diagnostic-model-select">Area-change model</label
+                  ><select id="diagnostic-model-select"></select>
+                </div>
+                <div class="field">
+                  <label for="scatter-scale">Axis scale</label
+                  ><select id="scatter-scale">
+                    <option value="linear">Linear</option>
+                    <option value="symlog">Sym. log</option>
+                  </select>
+                </div>
+              </div>
+              <h4 id="scatter-model-name"></h4>
+              <div id="scatter-chart" class="chart diagnostic-chart"></div>
+              <p class="hint">
+                All 478 lakes are included. Both axes share the same scale; the
+                range follows the chosen model. Symmetric log spreads out small
+                changes while retaining large outliers.
+              </p>
+              <p id="scatter-outlier-note" class="hint"></p>
+            </div>
+            <div class="diagnostic-panel">
+              <h3>Do the probabilities match reality?</h3>
+              <p class="hint">
+                Points above the diagonal mean expansion happened more often
+                than predicted. Larger dots contain more lakes.
+              </p>
+              <div class="diagnostic-controls">
+                <div class="field">
+                  <label for="classifier-select">Expansion classifier</label
+                  ><select id="classifier-select"></select>
+                </div>
+              </div>
+              <h4>2024 probability reliability</h4>
+              <div id="calibration-chart" class="chart diagnostic-chart"></div>
+              <p class="hint">
+                Ten fixed-width probability bins; empty bins are omitted. Small
+                bins can fluctuate. This visual checks the saved probabilities;
+                it does not recalibrate them.
+              </p>
+              <details class="explanation">
+                <summary>Inspect probability bins</summary>
+                <div class="table-scroll">
+                  <table>
+                    <caption>
+                      Bins include their lower endpoint; the last also includes
+                      100%.
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Bin</th>
+                        <th scope="col">Lakes</th>
+                        <th scope="col">Mean prediction</th>
+                        <th scope="col">Expanded</th>
+                      </tr>
+                    </thead>
+                    <tbody id="calibration-bins"></tbody>
+                  </table>
+                </div>
+              </details>
+            </div>
           </section>
           <section class="results-section" aria-labelledby="results-title">
             <div class="section-heading">
