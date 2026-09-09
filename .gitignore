@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+.pytest_cache/
+test-results/
+playwright-report/
+*.log
+
+# The written submission is private.
+*.pdf
+*.zip
+*.docx
+*.tex

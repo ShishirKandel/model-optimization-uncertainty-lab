@@ -1,0 +1,15 @@
+{
+  "name": "model-optimization-uncertainty-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive coursework companion: Nepal lake forecasts and explainable fuzzy control",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node --test tests/controller.test.mjs",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

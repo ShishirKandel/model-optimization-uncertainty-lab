@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore evaluated Nepal glacial-lake forecasts and try an explainable fuzzy temperature controller. An interactive advanced machine learning coursework companion by Shishir Kandel."
+    />
+    <meta name="theme-color" content="#172e49" />
+    <title>Model lab · Shishir Kandel</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the experiment</a>
+    <header class="site-header">
+      <a class="brand" href="#lakes" aria-label="Model lab home"
+        ><svg viewBox="0 0 36 36" aria-hidden="true">
+          <path d="M5 26 13 9l6 11 5-8 7 14" />
+          <path d="M5 30h26M8 26h20" /></svg
+        ><span
+          >Model lab<span class="brand-detail"
+            >Advanced machine learning</span
+          ></span
+        ></a
+      >
+      <div class="author">
+        <span>Shishir Kandel</span
+        ><a
+          href="https://github.com/ShishirKandel/model-optimization-uncertainty-lab"
+          target="_blank"
+          rel="noopener"
+          >View on GitHub <span aria-hidden="true">↗</span></a
+        >
+      </div>
+    </header>
+    <main id="main">
+      <section class="intro">
+        <div>
+          <h1>Forecasts &amp; fuzzy control.</h1>
+          <p>
+            Explore glacial-lake predictions in Nepal, then look inside a
+            room-temperature controller. An interactive companion to the
+            coursework.
+          </p>
+        </div>
+        <span class="course-label"
+          >STW7085CEM<br />Model optimisation &amp; uncertainty</span
+        >
+      </section>
+      <nav class="tabs" role="tablist" aria-label="Experiments">
+        <button
+          id="tab-lakes"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-lakes"
+          data-tab="lakes"
+        >
+          Lake forecasts
+        </button>
+        <button
+          id="tab-controller"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-controller"
+          tabindex="-1"
+          data-tab="controller"
+        >
+          Room controller
+        </button>
+        <button
+          id="tab-evidence"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-evidence"
+          tabindex="-1"
+          data-tab="evidence"
+        >
+          About &amp; evidence
+        </button>
+      </nav>
+
+      <section id="panel-lakes" role="tabpanel" aria-labelledby="tab-lakes">
+        <div class="section-heading">
+          <div>
+            <h2>How much will a lake change?</h2>
+            <p>
+              Choose a lake to compare a recorded forecast with what was mapped
+              in 2024.
+            </p>
+          </div>
+          <span class="badge">Held-out 2024 evaluation</span>
+        </div>
+        <p id="lake-loading" class="loading" role="status">
+          Loading the evaluated lake records…
+        </p>
+        <div id="lake-error" class="error-message" role="alert" hidden>
+          Lake data could not be loaded. Check your connection and
+          <button type="button" data-reload>reload the page</button>.
+        </div>
+        <div id="lake-content" hidden>
+          <div class="experiment-layout">
+            <aside class="control-rail" aria-label="Lake selection">
+              <div class="field">
+                <label for="basin-select">River basin</label
+                ><select id="basin-select">
+                  <option value="all">All basins</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="lake-search">Find a lake</label
+                ><input
+                  id="lake-search"
+                  type="search"
+                  placeholder="Search lake ID…"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="field">
+                <label for="lake-select"
+                  >Lake <span id="lake-count" class="field-note"></span></label
+                ><select id="lake-select"></select>
+              </div>
+              <p id="no-lakes" hidden>
+                No matching lakes. Try another ID or basin.
+              </p>
+              <div id="lake-coordinates" class="coordinates"></div>
+              <div class="rail-divider"></div>
+              <div class="field">
+                <label for="model-select">Area-change model</label
+                ><select id="model-select"></select>
+                <p class="hint">
+                  Switch models to compare their forecast and uncertainty.
+                </p>
+              </div>
+              <div class="rail-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 10v7M12 6v1" />
+                </svg>
+                <p>
+                  These are saved test predictions. Selecting a lake does not
+                  train a model or make a new forecast.
+                </p>
+              </div>
+              <button id="download-lake" class="text-button" type="button">
+                Download this lake’s data ↓
+              </button>
+            </aside>
+            <div id="lake-detail" class="visual-panel">
+              <div class="chart-heading">
+                <div>
+                  <p id="lake-basin" class="small-label"></p>
+                  <h3 id="lake-heading"></h3>
+                </div>
+                <span class="chart-unit">Mapped area · km²</span>
+              </div>
+              <div id="history-chart" class="chart" aria-live="off"></div>
+              <div class="legend">
+                <span><i class="legend-line history"></i>Observed history</span
+                ><span><i class="legend-dot actual"></i>Observed 2024</span
+                ><span><i class="legend-dot forecast"></i>Forecast</span
+                ><span
+                  ><i class="legend-band"></i
+                  ><span id="interval-legend"
+                    >90% prediction interval</span
+                  ></span
+                >
+              </div>
+              <div
+                class="forecast-summary"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <div>
+                  <span>Predicted area change</span
+                  ><strong id="forecast-value"></strong
+                  ><small id="forecast-model-name"></small>
+                </div>
+                <div>
+                  <span>Observed area change</span
+                  ><strong id="actual-value"></strong><small>2023 → 2024</small>
+                </div>
+                <div>
+                  <span id="interval-label">90% prediction interval</span
+                  ><strong id="interval-value" class="interval-value"></strong
+                  ><small>Range of proportional change</small>
+                </div>
+              </div>
+              <details class="explanation">
+                <summary>How to read this chart</summary>
+                <p>
+                  The solid line shows mapped area up to 2023. The square is the
+                  observed 2024 area; the blue point is the chosen model’s
+                  forecast. The vertical blue band represents its nominal 90%
+                  prediction interval, which can miss the observation. Forecast
+                  areas are calculated from the 2023 area and the model’s
+                  predicted proportional change. Missing historical years are
+                  not interpolated.
+                </p>
+              </details>
+            </div>
+          </div>
+          <section
+            class="classification-section"
+            aria-labelledby="classification-title"
+          >
+            <div>
+              <h3 id="classification-title">
+                A separate question: will it expand?
+              </h3>
+              <p>
+                These classifiers estimate the probability of any increase in
+                mapped area. They are separate from the regression model
+                selected above.
+              </p>
+              <p class="hint">
+                Probabilities are imperfectly calibrated; the GP model
+                understates expansion frequency in 2024.
+              </p>
+            </div>
+            <div id="probabilities" class="probability-list"></div>
+          </section>
+          <section class="results-section" aria-labelledby="results-title">
+            <div class="section-heading">
+              <div>
+                <h3 id="results-title">What happened across all 478 lakes?</h3>
+                <p>
+                  The same held-out year, with the same lakes for every model.
+                </p>
+              </div>
+            </div>
+            <div class="finding">
+              <strong>The simple baseline held up.</strong>
+              <p>
+                Persistence, which predicts no area change, has the lowest mean
+                absolute error. Gaussian process regression has narrower
+                intervals and coverage closer to 90%, but persistence has the
+                better interval score.
+              </p>
+            </div>
+            <div
+              class="table-scroll"
+              role="region"
+              aria-label="Regression results"
+              tabindex="0"
+            >
+              <table>
+                <caption>
+                  2024 regression results. Lower error and interval score are
+                  better.
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Model</th>
+                    <th scope="col">MAE <span>(fraction)</span></th>
+                    <th scope="col">RMSE <span>(fraction)</span></th>
+                    <th scope="col">Interval coverage</th>
+                    <th scope="col">Interval score</th>
+                  </tr>
+                </thead>
+                <tbody id="metrics-body"></tbody>
+              </table>
+            </div>
+            <details class="explanation">
+              <summary>Classification results and metric definitions</summary>
+              <p>
+                MAE and RMSE measure error in proportional area change: 0.10 is
+                ten percentage points. Coverage is the fraction of observations
+                inside nominal 90% intervals. Interval score balances width and
+                misses. For classifiers, lower Brier score and log loss are
+                better; higher average precision indicates better expansion
+                ranking.
+              </p>
+              <div class="table-scroll">
+                <table>
+                  <caption>
+                    2024 expansion classification
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th>Model</th>
+                      <th>Brier score</th>
+                      <th>Log loss</th>
+                      <th>Average precision</th>
+                    </tr>
+                  </thead>
+                  <tbody id="classifier-metrics"></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+        </div>
+        <p class="scope-note">
+          Scope: mapped lake-area change supports monitoring. It does not
+          estimate glacial-lake outburst flood risk.
+        </p>
+      </section>
+
+      <section
+        id="panel-controller"
+        role="tabpanel"
+        aria-labelledby="tab-controller"
+        hidden
+      >
+        <div class="section-heading">
+          <div>
+            <h2>A controller you can explain.</h2>
+            <p>
+              Change the inputs and follow the fuzzy rules behind each heating
+              or cooling command.
+            </p>
+          </div>
+          <span class="badge">Live manual Mamdani controller</span>
+        </div>
+        <p id="controller-loading" class="loading" role="status">
+          Loading the controller…
+        </p>
+        <div id="controller-error" class="error-message" role="alert" hidden>
+          The controller could not be loaded. Check your connection and
+          <button type="button" data-reload>reload the page</button>.
+        </div>
+        <div id="controller-content" hidden>
+          <div class="experiment-layout">
+            <aside class="control-rail" aria-label="Controller inputs">
+              <div class="preset-group" aria-label="Try a scenario">
+                <span class="field-label">Try a scenario</span>
+                <div>
+                  <button type="button" data-preset="cold">Cold room</button
+                  ><button type="button" data-preset="hot">Hot room</button
+                  ><button type="button" data-preset="near">
+                    Near preference
+                  </button>
+                </div>
+              </div>
+              <div class="field slider-field">
+                <label for="error-input"
+                  >Temperature error
+                  <output id="error-output" for="error-input"
+                    >0 °C</output
+                  ></label
+                ><input
+                  id="error-input"
+                  type="range"
+                  min="-8"
+                  max="8"
+                  step="0.1"
+                  value="0"
+                />
+                <div class="range-labels">
+                  <span>−8 °C · too warm</span><span>+8 °C · too cold</span>
+                </div>
+                <p class="hint">
+                  Error = preferred temperature − room temperature.
+                </p>
+              </div>
+              <div class="field slider-field">
+                <label for="outdoor-input"
+                  >Outdoor temperature
+                  <output id="outdoor-output" for="outdoor-input"
+                    >15 °C</output
+                  ></label
+                ><input
+                  id="outdoor-input"
+                  type="range"
+                  min="-10"
+                  max="40"
+                  step="0.5"
+                  value="15"
+                />
+                <div class="range-labels">
+                  <span>−10 °C</span><span>40 °C</span>
+                </div>
+              </div>
+              <div class="override-box">
+                <label class="checkbox-label" for="override-enabled"
+                  ><input id="override-enabled" type="checkbox" />Enable manual
+                  override</label
+                >
+                <div class="field slider-field">
+                  <label for="override-input"
+                    >Manual command
+                    <output id="override-output" for="override-input"
+                      >0%</output
+                    ></label
+                  ><input
+                    id="override-input"
+                    type="range"
+                    min="-100"
+                    max="100"
+                    step="1"
+                    value="0"
+                    disabled
+                  />
+                  <div class="range-labels">
+                    <span>Cooling</span><span>Heating</span>
+                  </div>
+                </div>
+                <p class="hint">
+                  A valid override takes priority over automatic control.
+                </p>
+              </div>
+              <button id="reset-controller" class="text-button" type="button">
+                Reset controls
+              </button>
+            </aside>
+            <div class="visual-panel controller-visual">
+              <div class="chart-heading">
+                <h3>HVAC command</h3>
+                <span id="controller-status" class="status-pill"
+                  >Automatic</span
+                >
+              </div>
+              <div
+                class="command-display"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <div class="room-illustration" aria-hidden="true">
+                  <svg viewBox="0 0 220 155">
+                    <path class="room-wall" d="M22 131V30h174v101M22 131h174" />
+                    <path
+                      class="window-frame"
+                      d="M47 47h44v39H47zM69 47v39M47 66h44"
+                    />
+                    <path
+                      class="bed-frame"
+                      d="M48 127v-26h83v26M48 108h83M58 101V88h19v13M133 131h39V99h-39"
+                    />
+                    <rect
+                      class="hvac"
+                      x="121"
+                      y="44"
+                      width="52"
+                      height="21"
+                      rx="4"
+                    />
+                    <path
+                      class="airflow"
+                      d="M131 77c-8 8 8 12 0 21m15-21c-8 8 8 12 0 21m15-21c-8 8 8 12 0 21"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <strong id="command-value" data-command="0">0.0%</strong
+                  ><span id="command-label">Neutral</span>
+                  <p id="room-description"></p>
+                </div>
+              </div>
+              <div class="command-gauge" aria-hidden="true">
+                <div id="gauge-fill"></div>
+                <span class="gauge-zero"></span><span id="gauge-marker"></span>
+              </div>
+              <div class="gauge-labels">
+                <span>−100% cooling</span><span>0</span
+                ><span>+100% heating</span>
+              </div>
+              <div class="inference-heading">
+                <h4>Inside the decision</h4>
+                <span id="rules-count"></span>
+              </div>
+              <div id="membership-chart" class="chart membership-chart"></div>
+              <p id="aggregation-caption" class="hint">
+                The shaded area combines active output sets. Its centroid gives
+                the command.
+              </p>
+            </div>
+          </div>
+          <section class="rules-section">
+            <div>
+              <h3>Which rules are active?</h3>
+              <p>
+                Each rule combines temperature error and outdoor conditions.
+                Stronger activation contributes more to the final output.
+              </p>
+              <div class="method-steps">
+                <span>Fuzzify inputs</span><b aria-hidden="true">›</b
+                ><span>Apply rules</span><b aria-hidden="true">›</b
+                ><span>Find centroid</span>
+              </div>
+            </div>
+            <div id="active-rules" class="active-rules" aria-live="off"></div>
+          </section>
+          <details class="explanation">
+            <summary>Controller method and limits</summary>
+            <p>
+              This demo uses the original hand-designed membership sets and
+              15-rule table with the current input guard. Mamdani inference uses
+              minimum for conjunction and implication, maximum for aggregation,
+              and a centroid over 201 output points. Negative commands mean
+              cooling; positive commands mean heating. There is no room-dynamics
+              simulation here.
+            </p>
+            <p>
+              The report also evaluates genetic membership tuning. Its 74.2%
+              reduction in synthetic-policy command error does not establish
+              better room-temperature tracking. A separate plant-consistent
+              study is documented in the Task 2 report. The live controller on
+              this page is the manual baseline.
+            </p>
+            <p>
+              A valid manual command has priority. Nonfinite or invalid inputs
+              return a zero command with a fault status; finite inputs outside
+              the declared domains are clipped. Software limits are not evidence
+              of occupant safety.
+            </p>
+          </details>
+        </div>
+        <p class="scope-note">
+          Educational demonstration only. This page is not connected to physical
+          HVAC equipment.
+        </p>
+      </section>
+
+      <section
+        id="panel-evidence"
+        role="tabpanel"
+        aria-labelledby="tab-evidence"
+        hidden
+      >
+        <div class="section-heading">
+          <div>
+            <h2>The work behind the interface.</h2>
+            <p>
+              Read the methods, results and limitations alongside the
+              interactive demonstrations.
+            </p>
+          </div>
+        </div>
+        <div class="evidence-layout">
+          <div>
+            <h3>Two tasks, two different questions</h3>
+            <p>
+              <strong>Task 1</strong> studies probabilistic forecasts of annual
+              glacial-lake area change in Nepal. This interface exposes the
+              saved 2024 evaluation across 478 lakes, with five regression
+              models and three classifiers.
+            </p>
+            <p>
+              <strong>Task 2</strong> studies fuzzy control and evolutionary
+              optimisation for an assistive-bedroom HVAC system. The interface
+              lets you inspect the manual controller’s actual rule-based
+              computation.
+            </p>
+            <h3 class="subheading">Research team</h3>
+            <ol id="research-authors" class="authors-list">
+              <li>Shishir Kandel</li>
+              <li>Netra Bahadur Budhathoki Magar</li>
+              <li>Rijwol Shakya</li>
+            </ol>
+            <p>
+              STW7085CEM Advanced Machine Learning. The combined written
+              submission is shared directly with the lecturer.
+            </p>
+            <h3 class="subheading">What is running here?</h3>
+            <p>
+              The lake explorer reads exported results from the completed Python
+              experiments. The room controller runs a JavaScript implementation
+              checked against the Python controller. Neither tab retrains
+              models. All interactive assets are bundled with this site.
+            </p>
+          </div>
+          <div class="downloads">
+            <h3>Project resources</h3>
+            <a
+              class="download-link"
+              href="https://github.com/ShishirKandel/model-optimization-uncertainty-lab"
+              target="_blank"
+              rel="noopener"
+              ><span
+                ><strong>Website source</strong
+                ><small>Code, tests and export tools · GitHub</small></span
+              ><span aria-hidden="true">↗</span></a
+            ><a class="download-link" href="data/lakes.json" download
+              ><span
+                ><strong>Lake evaluation data</strong
+                ><small>All 478 lakes with provenance · JSON</small></span
+              ><span aria-hidden="true">↓</span></a
+            >
+          </div>
+        </div>
+        <section class="provenance">
+          <h3>Data and reproducibility</h3>
+
+          <p id="dataset-attribution">
+            Lake records derive from the Nepal glacial-lake inventory described
+            in the Task 1 report. Exported data retain the evaluated run
+            identity and source-file SHA-256 hashes.
+          </p>
+          <p>
+            The
+            <a
+              href="https://github.com/ShishirKandel/model-optimization-uncertainty-task-1"
+              target="_blank"
+              rel="noopener"
+              >existing Task 1 code repository</a
+            >
+            is a convenience copy. The original experiment’s archived source
+            snapshot is the reproduction authority; see the report’s source
+            notes.
+          </p>
+          <details class="explanation">
+            <summary>Inspect export provenance</summary>
+            <pre id="provenance-detail">Loading provenance…</pre>
+          </details>
+        </section>
+      </section>
+    </main>
+    <footer>
+      <span>Shishir Kandel · Advanced Machine Learning</span
+      ><span>Research results, with their uncertainty.</span>
+    </footer>
+    <noscript
+      ><p class="error-message">
+        Enable JavaScript to explore the interactive lake data and controller.
+      </p></noscript
+    >
+  </body>
+</html>

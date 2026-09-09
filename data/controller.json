@@ -1,0 +1,164 @@
+{
+  "universes": {
+    "error": [
+      -8.0,
+      8.0
+    ],
+    "outdoor": [
+      -10.0,
+      40.0
+    ],
+    "output": [
+      -100.0,
+      100.0
+    ]
+  },
+  "sets": {
+    "error": [
+      {
+        "name": "room_much_too_hot",
+        "centre": -8.0,
+        "width": 4.5,
+        "left_shoulder": true,
+        "right_shoulder": false
+      },
+      {
+        "name": "room_warm",
+        "centre": -4.0,
+        "width": 4.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "near_preferred",
+        "centre": 0.0,
+        "width": 3.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "room_cool",
+        "centre": 4.0,
+        "width": 4.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "room_much_too_cold",
+        "centre": 8.0,
+        "width": 4.5,
+        "left_shoulder": false,
+        "right_shoulder": true
+      }
+    ],
+    "outdoor": [
+      {
+        "name": "cold",
+        "centre": -10.0,
+        "width": 25.0,
+        "left_shoulder": true,
+        "right_shoulder": false
+      },
+      {
+        "name": "mild",
+        "centre": 15.0,
+        "width": 20.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "hot",
+        "centre": 40.0,
+        "width": 25.0,
+        "left_shoulder": false,
+        "right_shoulder": true
+      }
+    ],
+    "output": [
+      {
+        "name": "strong_cooling",
+        "centre": -100.0,
+        "width": 36.0,
+        "left_shoulder": true,
+        "right_shoulder": false
+      },
+      {
+        "name": "medium_cooling",
+        "centre": -66.6667,
+        "width": 34.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "light_cooling",
+        "centre": -33.3333,
+        "width": 34.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "off",
+        "centre": 0.0,
+        "width": 30.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "light_heating",
+        "centre": 33.3333,
+        "width": 34.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "medium_heating",
+        "centre": 66.6667,
+        "width": 34.0,
+        "left_shoulder": false,
+        "right_shoulder": false
+      },
+      {
+        "name": "strong_heating",
+        "centre": 100.0,
+        "width": 36.0,
+        "left_shoulder": false,
+        "right_shoulder": true
+      }
+    ]
+  },
+  "rule_table": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      2,
+      1,
+      1
+    ],
+    [
+      4,
+      3,
+      2
+    ],
+    [
+      5,
+      5,
+      4
+    ],
+    [
+      6,
+      6,
+      5
+    ]
+  ],
+  "output_grid_points": 201,
+  "provenance": {
+    "label": "Original manual Mamdani controller",
+    "source": "configs/task2.yaml",
+    "source_sha256": "c867f41cc92cb64c2ac101ab02f7223a417251b45886f6444b356ba6d48a9a1e",
+    "method": "Minimum implication, maximum aggregation, trapezoidal centroid on 201 output points",
+    "note": "Live demonstration uses manual parameters, not the GA-tuned controller. Commands are percentages; positive heats and negative cools. No room physics is simulated."
+  }
+}
