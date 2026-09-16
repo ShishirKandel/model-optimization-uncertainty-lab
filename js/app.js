@@ -18,6 +18,7 @@ const el = (tag, content, className) => {
 };
 let lakeData, currentLake, controllerConfig;
 let nepalOutline = null;
+const lakeLabels = new Map();
 
 function activateTab(name, focus = false) {
   if (!["lakes", "controller", "evidence"].includes(name)) name = "lakes";
@@ -64,20 +65,40 @@ function addOptions(select, options, previous) {
   );
   if (options.some((option) => option.id === previous)) select.value = previous;
 }
+function updateLakeNavigation() {
+  const select = $("lake-select");
+  $("previous-lake").disabled = select.selectedIndex <= 0;
+  $("next-lake").disabled = select.selectedIndex < 0 || select.selectedIndex >= select.options.length - 1;
+}
+for (const [id, step] of [["previous-lake", -1], ["next-lake", 1]]) {
+  $(id).addEventListener("click", () => {
+    const select = $("lake-select");
+    const index = select.selectedIndex + step;
+    if (index < 0 || index >= select.options.length) return;
+    select.selectedIndex = index;
+    renderLake();
+  });
+}
 function filterLakes() {
   const basin = $("basin-select").value;
   const query = $("lake-search").value.trim().toLowerCase();
   const visible = lakeData.lakes.filter(
     (lake) =>
       (basin === "all" || lake.basin === basin) &&
-      lake.id.toLowerCase().includes(query),
+      `${lake.id} ${lakeLabels.get(lake.id)}`.toLowerCase().includes(query),
   );
   const previous = $("lake-select").value;
-  addOptions(
-    $("lake-select"),
-    visible.map((lake) => ({ id: lake.id, name: lake.id.replace("GLO_", "") })),
-    previous,
-  );
+  const select = $("lake-select");
+  select.replaceChildren();
+  for (const basin of [...new Set(visible.map(lake => lake.basin))].sort()) {
+    const group = document.createElement("optgroup");
+    group.label = `${basin} basin`;
+    visible.filter(lake => lake.basin === basin).forEach(lake =>
+      group.append(new Option(`${lake.id} (${lakeLabels.get(lake.id)})`, lake.id)));
+    select.append(group);
+  }
+  if (visible.some(lake => lake.id === previous)) select.value = previous;
+  updateLakeNavigation();
   text("lake-count", `${visible.length} of ${lakeData.lakes.length}`);
   $("no-lakes").hidden = visible.length > 0;
   $("lake-select").disabled = !visible.length;
@@ -87,6 +108,7 @@ function filterLakes() {
   if (!visible.length) {
     currentLake = null;
     text("lake-coordinates", "");
+    text("selected-lake-summary", "");
     renderLakeVisuals();
     $("probabilities").replaceChildren(
       el("p", "Select a matching lake to see its probabilities.", "hint"),
@@ -108,7 +130,9 @@ function renderLake() {
       "Selected regression model is not available in this record.",
     );
   renderLakeVisuals();
-  text("lake-heading", currentLake.id);
+  text("lake-heading", `${lakeLabels.get(currentLake.id)} (${currentLake.id})`);
+  text("selected-lake-summary", `${lakeLabels.get(currentLake.id)}: ${currentLake.id}`);
+  updateLakeNavigation();
   text("lake-basin", `${currentLake.basin} basin · Nepal`);
   text(
     "lake-coordinates",
@@ -206,6 +230,25 @@ async function loadLakes() {
       ...new Set(lakeData.lakes.map((lake) => lake.basin)),
     ].sort();
     basins.forEach((basin) => $("basin-select").add(new Option(basin, basin)));
+    basins.forEach(basin => {
+      const lakes = lakeData.lakes.filter(lake => lake.basin === basin)
+        .sort((a, b) => a.id.localeCompare(b.id));
+      lakes.forEach((lake, index) => lakeLabels.set(lake.id,
+        `${basin} lake ${String(index + 1).padStart(3, "0")}`));
+      const example = lakes.reduce((largest, lake) =>
+        lake.forecast.baseArea > largest.forecast.baseArea ? lake : largest);
+      const button = el("button", basin, "text-button");
+      button.type = "button";
+      button.title = `Largest evaluated lake in ${basin} by 2023 area`;
+      button.addEventListener("click", () => {
+        $("basin-select").value = "all";
+        $("lake-search").value = "";
+        filterLakes();
+        $("lake-select").value = example.id;
+        renderLake();
+      });
+      $("lake-examples").append(button);
+    });
     addOptions(
       $("model-select"),
       lakeData.lakes[0].forecast.models,

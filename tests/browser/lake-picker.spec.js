@@ -1,0 +1,34 @@
+﻿import { test, expect } from '@playwright/test';
+
+test('browse labelled lakes without typing, with stable labels and recovery', async ({ page }) => {
+  await page.goto('./');
+  const select = page.locator('#lake-select');
+  await expect(select.locator('option')).toHaveCount(478);
+  await expect(select.locator('optgroup')).toHaveCount(3);
+  await expect(select.locator('option').first()).toHaveText(/GLO_.+ \(Gandaki lake \d{3}\)/);
+  await expect(page.locator('#previous-lake')).toBeDisabled();
+  const first = await select.inputValue();
+  await page.locator('#next-lake').click();
+  await expect(select).not.toHaveValue(first);
+  const second = await select.inputValue();
+  const label = await select.locator('option:checked').textContent();
+  await expect(page.locator('#lake-heading')).toContainText(second);
+  await page.locator('#previous-lake').click();
+  await expect(select).toHaveValue(first);
+  await page.locator('#lake-search').fill(second);
+  await expect(select.locator('option')).toHaveCount(1);
+  await expect(select.locator('option:checked')).toHaveText(label);
+  await expect(page.locator('#previous-lake')).toBeDisabled();
+  await expect(page.locator('#next-lake')).toBeDisabled();
+  await page.locator('#lake-search').fill('no-such-lake');
+  await expect(select).toBeDisabled();
+  await page.locator('#lake-examples').getByRole('button', {name: 'Koshi', exact: true}).click();
+  await expect(select.locator('option')).toHaveCount(478);
+  await expect(page.locator('#lake-heading')).toContainText('Koshi lake');
+  await expect(page.locator('#lake-search')).toHaveValue('');
+  await page.locator('#lake-search').fill('Karnali lake 001');
+  await expect(select.locator('option')).toHaveCount(1);
+  await expect(page.locator('#lake-heading')).toContainText('Karnali lake 001');
+  await page.setViewportSize({width:320,height:800});
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

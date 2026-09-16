@@ -104,31 +104,36 @@
           <button type="button" data-reload>reload the page</button>.
         </div>
         <div id="lake-content" hidden>
+          <section class="lake-picker" aria-label="Browse lakes">
+            <h3>Choose a lake to explore</h3>
+            <p class="hint">Choose from the dropdown or try an example. No lake ID needed.</p>
+            <div class="lake-picker-grid">
+              <div class="field lake-choice">
+                <label for="lake-select">Lake <span id="lake-count" class="field-note"></span></label>
+                <select id="lake-select" aria-describedby="lake-label-note"></select>
+              </div>
+              <div class="field">
+                <label for="basin-select">River basin</label>
+                <select id="basin-select"><option value="all">All basins</option></select>
+              </div>
+              <div class="field">
+                <label for="lake-search">Find a lake <span class="field-note">optional</span></label>
+                <input id="lake-search" type="search" placeholder="ID, basin or browsing label" autocomplete="off">
+              </div>
+            </div>
+            <div class="lake-browse-actions">
+              <div class="lake-navigation">
+                <button id="previous-lake" type="button" class="text-button">Previous lake</button>
+                <button id="next-lake" type="button" class="text-button">Next lake</button>
+              </div>
+              <div id="lake-examples" class="lake-examples" aria-label="Example lakes"><span class="hint">Try an example:</span></div>
+            </div>
+            <p id="lake-label-note" class="hint">Names in brackets are basin-based browsing labels, not official lake names. The source inventory provides IDs only.</p>
+            <p id="no-lakes" role="status" hidden>No matching lakes. Clear the search or choose an example.</p>
+            <p id="selected-lake-summary" class="selected-lake-summary" aria-live="polite"></p>
+          </section>
           <div class="experiment-layout">
-            <aside class="control-rail" aria-label="Lake selection">
-              <div class="field">
-                <label for="basin-select">River basin</label
-                ><select id="basin-select">
-                  <option value="all">All basins</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="lake-search">Find a lake</label
-                ><input
-                  id="lake-search"
-                  type="search"
-                  placeholder="Search lake ID…"
-                  autocomplete="off"
-                />
-              </div>
-              <div class="field">
-                <label for="lake-select"
-                  >Lake <span id="lake-count" class="field-note"></span></label
-                ><select id="lake-select"></select>
-              </div>
-              <p id="no-lakes" hidden>
-                No matching lakes. Try another ID or basin.
-              </p>
+            <aside class="control-rail" aria-label="Forecast controls">
               <div id="lake-coordinates" class="coordinates"></div>
               <div class="rail-divider"></div>
               <div class="field">

@@ -1263,3 +1263,21 @@ footer {
     font-size: 16px;
   }
 }
+
+.lake-picker { margin-bottom: 26px; padding: 24px; background: #edf3f8; border: 1px solid var(--line); border-radius: 12px; }
+.lake-picker h3 { margin: 0 0 6px; }
+.lake-picker-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; margin-top: 20px; }
+.lake-picker-grid .field { min-width: 0; margin: 0; }
+.lake-choice { grid-column: 1 / -1; }
+.lake-choice select { font-size: .95rem; height: 48px; }
+.lake-browse-actions, .lake-navigation, .lake-examples { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.lake-browse-actions { justify-content: space-between; margin: 16px 0; }
+.lake-picker .text-button { margin: 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.lake-picker button:disabled { opacity: .45; cursor: default; }
+.selected-lake-summary { overflow-wrap: anywhere; font-size: .85rem; margin-bottom: 0; }
+#lake-heading { overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .lake-picker { padding: 18px 14px; }
+  .lake-picker-grid { grid-template-columns: minmax(0, 1fr); }
+  .lake-choice select { font-size: .8rem; }
+}
