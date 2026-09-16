@@ -118,7 +118,7 @@
               </div>
               <div class="field">
                 <label for="lake-search">Find a lake <span class="field-note">optional</span></label>
-                <input id="lake-search" type="search" placeholder="ID, basin or browsing label" autocomplete="off">
+                <input id="lake-search" type="search" placeholder="Lake name, ID or basin" autocomplete="off">
               </div>
             </div>
             <div class="lake-browse-actions">
@@ -128,9 +128,11 @@
               </div>
               <div id="lake-examples" class="lake-examples" aria-label="Example lakes"><span class="hint">Try an example:</span></div>
             </div>
-            <p id="lake-label-note" class="hint">Names in brackets are basin-based browsing labels, not official lake names. The source inventory provides IDs only.</p>
+            <p id="lake-label-note" class="hint">Names in brackets come from matching inventory coordinates to named lake boundaries on OpenStreetMap; they are community map names, not official inventory names. Unmatched lakes show &ldquo;Name not verified&rdquo;.</p>
+            <p class="hint"><span id="lake-name-coverage"></span> Name data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">&copy; OpenStreetMap contributors, ODbL</a>.</p>
             <p id="no-lakes" role="status" hidden>No matching lakes. Clear the search or choose an example.</p>
             <p id="selected-lake-summary" class="selected-lake-summary" aria-live="polite"></p>
+            <p id="lake-identity-links" class="hint" hidden><a id="lake-map-link" target="_blank" rel="noopener">View this lake on map</a> <a id="lake-name-source" target="_blank" rel="noopener">Lake name source</a></p>
           </section>
           <div class="experiment-layout">
             <aside class="control-rail" aria-label="Forecast controls">

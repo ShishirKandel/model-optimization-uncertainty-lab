@@ -1281,3 +1281,6 @@ footer {
   .lake-picker-grid { grid-template-columns: minmax(0, 1fr); }
   .lake-choice select { font-size: .8rem; }
 }
+
+#lake-identity-links { display: flex; gap: 18px; flex-wrap: wrap; }
+#lake-identity-links[hidden] { display: none; }

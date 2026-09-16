@@ -1,0 +1,281 @@
+{
+  "meta": {
+    "source": "OpenStreetMap contributors",
+    "license": "ODbL-1.0",
+    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "retrieved": "2026-09-16",
+    "osmTimestamp": "2026-09-16T03:48:50Z",
+    "method": "Inventory coordinate contained in exactly one named closed OpenStreetMap water way. Generic labels and ambiguous overlaps excluded. Community map names, not official inventory names. Unmatched does not mean unnamed. Relations and proximity-only matches not used.",
+    "rawSnapshotSha256": "9e25ccceed0200d4c14806638c92ee616659863efe99b5128b99960669e197ed"
+  },
+  "lakes": {
+    "GLO_85.41439_28.08199": {
+      "name": "Gosaikunda",
+      "source": "https://www.openstreetmap.org/way/24719058"
+    },
+    "GLO_85.4078_28.08038": {
+      "name": "Bhairab Kund",
+      "source": "https://www.openstreetmap.org/way/24719062"
+    },
+    "GLO_85.38895_28.06088": {
+      "name": "Lamu kunda",
+      "source": "https://www.openstreetmap.org/way/24719067"
+    },
+    "GLO_83.85335_28.69074": {
+      "name": "Tilicho Lake",
+      "source": "https://www.openstreetmap.org/way/26772994"
+    },
+    "GLO_86.69911_27.94145": {
+      "name": "Taujun Tso",
+      "source": "https://www.openstreetmap.org/way/36479494"
+    },
+    "GLO_86.68997_27.95151": {
+      "name": "Doodh Pokhari",
+      "source": "https://www.openstreetmap.org/way/40200994"
+    },
+    "GLO_86.68041_27.97505": {
+      "name": "Thonak Tsho / 4th Lake",
+      "source": "https://www.openstreetmap.org/way/40201010"
+    },
+    "GLO_86.68171_28.00567": {
+      "name": "Ngozumpa Tsho",
+      "source": "https://www.openstreetmap.org/way/40201011"
+    },
+    "GLO_86.68268_28.02481": {
+      "name": "Gyazumpa Tsho",
+      "source": "https://www.openstreetmap.org/way/40201014"
+    },
+    "GLO_85.39784_28.0537": {
+      "name": "Rajakunda",
+      "source": "https://www.openstreetmap.org/way/76673279"
+    },
+    "GLO_85.42803_28.07177": {
+      "name": "Suryakunda",
+      "source": "https://www.openstreetmap.org/way/76673282"
+    },
+    "GLO_85.39539_28.04948": {
+      "name": "Naukunda",
+      "source": "https://www.openstreetmap.org/way/76673285"
+    },
+    "GLO_85.46885_28.12449": {
+      "name": "Ganesh Kund",
+      "source": "https://www.openstreetmap.org/way/76673290"
+    },
+    "GLO_85.42276_28.06588": {
+      "name": "Aama kunda",
+      "source": "https://www.openstreetmap.org/way/76673291"
+    },
+    "GLO_84.06126_28.6797": {
+      "name": "Kicho Tal (Ice Lake)",
+      "source": "https://www.openstreetmap.org/way/161909543"
+    },
+    "GLO_83.92032_28.71215": {
+      "name": "Moon Lake",
+      "source": "https://www.openstreetmap.org/way/214404974"
+    },
+    "GLO_84.485_28.48833": {
+      "name": "Dona Lake",
+      "source": "https://www.openstreetmap.org/way/243513476"
+    },
+    "GLO_84.62921_28.59632": {
+      "name": "Birendra Lake",
+      "source": "https://www.openstreetmap.org/way/246684699"
+    },
+    "GLO_86.84394_27.88666": {
+      "name": "Dowo Tso",
+      "source": "https://www.openstreetmap.org/way/251433699"
+    },
+    "GLO_87.0815_27.84295": {
+      "name": "Upper Barun Glacial Lake",
+      "source": "https://www.openstreetmap.org/way/262286117"
+    },
+    "GLO_86.83556_27.99727": {
+      "name": "Dride Lake",
+      "source": "https://www.openstreetmap.org/way/262723401"
+    },
+    "GLO_87.08864_27.79792": {
+      "name": "Lower Barun Glacial Lake",
+      "source": "https://www.openstreetmap.org/way/263355394"
+    },
+    "GLO_86.47904_27.85858": {
+      "name": "Tsho Rolpa Lake",
+      "source": "https://www.openstreetmap.org/way/284549316"
+    },
+    "GLO_86.91866_27.85672": {
+      "name": "Panch Pokhari",
+      "source": "https://www.openstreetmap.org/way/286041401"
+    },
+    "GLO_86.9285_27.84945": {
+      "name": "Panch Pokhari",
+      "source": "https://www.openstreetmap.org/way/286042204"
+    },
+    "GLO_86.938_27.85715": {
+      "name": "Panch Pokhari",
+      "source": "https://www.openstreetmap.org/way/286080098"
+    },
+    "GLO_86.58638_27.87429": {
+      "name": "Dig Tsho Lake",
+      "source": "https://www.openstreetmap.org/way/286524816"
+    },
+    "GLO_86.59918_27.71135": {
+      "name": "Dudhkunda",
+      "source": "https://www.openstreetmap.org/way/286829892"
+    },
+    "GLO_86.5269_27.69894": {
+      "name": "Helamcha lake",
+      "source": "https://www.openstreetmap.org/way/286976441"
+    },
+    "GLO_86.52419_27.75048": {
+      "name": "Likhu Dudhpokharai",
+      "source": "https://www.openstreetmap.org/way/286986394"
+    },
+    "GLO_84.11691_28.44661": {
+      "name": "Kapuche Glacier Lake",
+      "source": "https://www.openstreetmap.org/way/298442238"
+    },
+    "GLO_81.68913_30.25151": {
+      "name": "Selima Tso",
+      "source": "https://www.openstreetmap.org/way/306356082"
+    },
+    "GLO_86.42199_27.7313": {
+      "name": "Panch Pokhari",
+      "source": "https://www.openstreetmap.org/way/314812223"
+    },
+    "GLO_85.70172_28.28234": {
+      "name": "चन्द्रशेखर ताल",
+      "source": "https://www.openstreetmap.org/way/325396969"
+    },
+    "GLO_80.90401_29.97394": {
+      "name": "Rinlepani Tal",
+      "source": "https://www.openstreetmap.org/way/330810092"
+    },
+    "GLO_82.41412_29.75359": {
+      "name": "Talak Tal",
+      "source": "https://www.openstreetmap.org/way/330989385"
+    },
+    "GLO_82.42308_29.38404": {
+      "name": "Dhauli Daha",
+      "source": "https://www.openstreetmap.org/way/331033483"
+    },
+    "GLO_85.17015_28.29238": {
+      "name": "Kalopokhari",
+      "source": "https://www.openstreetmap.org/way/340622687"
+    },
+    "GLO_85.12035_28.2745": {
+      "name": "Kalo Daha (Kunda)",
+      "source": "https://www.openstreetmap.org/way/340936486"
+    },
+    "GLO_84.45774_28.6575": {
+      "name": "namlyo lake",
+      "source": "https://www.openstreetmap.org/way/352887124"
+    },
+    "GLO_84.47186_28.66254": {
+      "name": "Ponkar lake",
+      "source": "https://www.openstreetmap.org/way/352887125"
+    },
+    "GLO_83.18184_29.00194": {
+      "name": "Chhiuti Tal",
+      "source": "https://www.openstreetmap.org/way/353916504"
+    },
+    "GLO_83.17372_28.99243": {
+      "name": "Chorum Tal",
+      "source": "https://www.openstreetmap.org/way/353918852"
+    },
+    "GLO_83.02541_29.10816": {
+      "name": "Chhalugal Tal",
+      "source": "https://www.openstreetmap.org/way/357841787"
+    },
+    "GLO_83.01367_29.13213": {
+      "name": "Chhoitai Tal",
+      "source": "https://www.openstreetmap.org/way/357841790"
+    },
+    "GLO_83.52813_28.88699": {
+      "name": "Muli Tal",
+      "source": "https://www.openstreetmap.org/way/365810546"
+    },
+    "GLO_84.80227_28.50563": {
+      "name": "Kal Tal",
+      "source": "https://www.openstreetmap.org/way/416097049"
+    },
+    "GLO_87.8661_27.86892": {
+      "name": "Nangama Glacial Lake",
+      "source": "https://www.openstreetmap.org/way/469009917"
+    },
+    "GLO_87.83135_27.84844": {
+      "name": "Chheche Pokhari",
+      "source": "https://www.openstreetmap.org/way/469009921"
+    },
+    "GLO_87.79069_27.8527": {
+      "name": "Senup Pokhari",
+      "source": "https://www.openstreetmap.org/way/478351664"
+    },
+    "GLO_87.81613_27.9096": {
+      "name": "Chenjam Pokhari",
+      "source": "https://www.openstreetmap.org/way/478351679"
+    },
+    "GLO_87.74957_27.8161": {
+      "name": "Lahare Taal",
+      "source": "https://www.openstreetmap.org/way/478518137"
+    },
+    "GLO_87.57764_27.77693": {
+      "name": "Lapsi Pokhari",
+      "source": "https://www.openstreetmap.org/way/480014368"
+    },
+    "GLO_87.63177_27.79668": {
+      "name": "Chhawa Pokhari",
+      "source": "https://www.openstreetmap.org/way/480014376"
+    },
+    "GLO_87.20644_27.69114": {
+      "name": "Kalo Pokhari",
+      "source": "https://www.openstreetmap.org/way/537728113"
+    },
+    "GLO_87.30166_27.8381": {
+      "name": "Banduke Pokhari",
+      "source": "https://www.openstreetmap.org/way/619470856"
+    },
+    "GLO_87.29166_27.84208": {
+      "name": "Lakshmi Pokhari",
+      "source": "https://www.openstreetmap.org/way/619471963"
+    },
+    "GLO_83.33287_29.22164": {
+      "name": "Chharka Kirphuk Tal",
+      "source": "https://www.openstreetmap.org/way/669582836"
+    },
+    "GLO_81.64363_30.15476": {
+      "name": "Gosainkunda",
+      "source": "https://www.openstreetmap.org/way/718866400"
+    },
+    "GLO_86.84968_27.60886": {
+      "name": "Pach Pokhari",
+      "source": "https://www.openstreetmap.org/way/884502385"
+    },
+    "GLO_86.46538_27.89056": {
+      "name": "Dudh Pokhari",
+      "source": "https://www.openstreetmap.org/way/997612693"
+    },
+    "GLO_87.78209_27.74467": {
+      "name": "Samdo Pokhari",
+      "source": "https://www.openstreetmap.org/way/1113341978"
+    },
+    "GLO_83.32984_28.78728": {
+      "name": "Kate Tal",
+      "source": "https://www.openstreetmap.org/way/1210685404"
+    },
+    "GLO_84.21765_28.40836": {
+      "name": "Tiuche Lake",
+      "source": "https://www.openstreetmap.org/way/1216888443"
+    },
+    "GLO_87.77748_27.75764": {
+      "name": "Sinjenma Pokhari",
+      "source": "https://www.openstreetmap.org/way/1309217754"
+    },
+    "GLO_84.25507_28.49673": {
+      "name": "Kajin Sara",
+      "source": "https://www.openstreetmap.org/way/1427061536"
+    },
+    "GLO_82.56355_29.18379": {
+      "name": "garud nuhani /dudkunda",
+      "source": "https://www.openstreetmap.org/way/1552242977"
+    }
+  }
+}

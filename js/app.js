@@ -19,6 +19,7 @@ const el = (tag, content, className) => {
 let lakeData, currentLake, controllerConfig;
 let nepalOutline = null;
 const lakeLabels = new Map();
+let lakeNames = {};
 
 function activateTab(name, focus = false) {
   if (!["lakes", "controller", "evidence"].includes(name)) name = "lakes";
@@ -85,16 +86,22 @@ function filterLakes() {
   const visible = lakeData.lakes.filter(
     (lake) =>
       (basin === "all" || lake.basin === basin) &&
-      `${lake.id} ${lakeLabels.get(lake.id)}`.toLowerCase().includes(query),
+      `${lake.id} ${lake.basin} ${lakeLabels.get(lake.id)}`.toLowerCase().includes(query),
   );
   const previous = $("lake-select").value;
   const select = $("lake-select");
   select.replaceChildren();
-  for (const basin of [...new Set(visible.map(lake => lake.basin))].sort()) {
+  const groups = [
+    ["Named lakes (OpenStreetMap)", visible.filter(lake => lakeNames[lake.id])
+      .sort((a, b) => lakeLabels.get(a.id).localeCompare(lakeLabels.get(b.id)))],
+    ...[...new Set(visible.map(lake => lake.basin))].sort().map(basin =>
+      [`${basin} basin - name not verified`, visible.filter(lake => lake.basin === basin && !lakeNames[lake.id])])
+  ];
+  for (const [label, lakes] of groups) {
+    if (!lakes.length) continue;
     const group = document.createElement("optgroup");
-    group.label = `${basin} basin`;
-    visible.filter(lake => lake.basin === basin).forEach(lake =>
-      group.append(new Option(`${lake.id} (${lakeLabels.get(lake.id)})`, lake.id)));
+    group.label = label;
+    lakes.forEach(lake => group.append(new Option(`${lake.id} (${lakeLabels.get(lake.id)})`, lake.id)));
     select.append(group);
   }
   if (visible.some(lake => lake.id === previous)) select.value = previous;
@@ -109,6 +116,7 @@ function filterLakes() {
     currentLake = null;
     text("lake-coordinates", "");
     text("selected-lake-summary", "");
+    $("lake-identity-links").hidden = true;
     renderLakeVisuals();
     $("probabilities").replaceChildren(
       el("p", "Select a matching lake to see its probabilities.", "hint"),
@@ -132,6 +140,11 @@ function renderLake() {
   renderLakeVisuals();
   text("lake-heading", `${lakeLabels.get(currentLake.id)} (${currentLake.id})`);
   text("selected-lake-summary", `${lakeLabels.get(currentLake.id)}: ${currentLake.id}`);
+  $("lake-identity-links").hidden = false;
+  const nameEntry = lakeNames[currentLake.id];
+  $("lake-name-source").hidden = !nameEntry;
+  $("lake-name-source").href = nameEntry?.source || "#";
+  $("lake-map-link").href = `https://www.openstreetmap.org/?mlat=${currentLake.lat}&mlon=${currentLake.lon}#map=15/${currentLake.lat}/${currentLake.lon}`;
   updateLakeNavigation();
   text("lake-basin", `${currentLake.basin} basin · Nepal`);
   text(
@@ -230,25 +243,30 @@ async function loadLakes() {
       ...new Set(lakeData.lakes.map((lake) => lake.basin)),
     ].sort();
     basins.forEach((basin) => $("basin-select").add(new Option(basin, basin)));
-    basins.forEach(basin => {
-      const lakes = lakeData.lakes.filter(lake => lake.basin === basin)
-        .sort((a, b) => a.id.localeCompare(b.id));
-      lakes.forEach((lake, index) => lakeLabels.set(lake.id,
-        `${basin} lake ${String(index + 1).padStart(3, "0")}`));
-      const example = lakes.reduce((largest, lake) =>
-        lake.forecast.baseArea > largest.forecast.baseArea ? lake : largest);
-      const button = el("button", basin, "text-button");
+    try {
+      const namesResponse = await fetch("data/lake-names.json");
+      if (!namesResponse.ok) throw new Error("Names unavailable");
+      lakeNames = (await namesResponse.json()).lakes;
+      text("lake-name-coverage", `${Object.keys(lakeNames).length} of ${lakeData.lakes.length} lakes have a mapped name.`);
+    } catch {
+      lakeNames = {};
+      text("lake-name-coverage", "Lake names could not be loaded. IDs and forecasts are still available.");
+    }
+    lakeData.lakes.forEach(lake => lakeLabels.set(lake.id,
+      lakeNames[lake.id]?.name || `Name not verified - ${lake.basin} basin`));
+    for (const id of ["GLO_83.85335_28.69074", "GLO_85.41439_28.08199", "GLO_86.47904_27.85858"]) {
+      if (!lakeNames[id]) continue;
+      const button = el("button", lakeNames[id].name, "text-button");
       button.type = "button";
-      button.title = `Largest evaluated lake in ${basin} by 2023 area`;
       button.addEventListener("click", () => {
         $("basin-select").value = "all";
         $("lake-search").value = "";
         filterLakes();
-        $("lake-select").value = example.id;
+        $("lake-select").value = id;
         renderLake();
       });
       $("lake-examples").append(button);
-    });
+    }
     addOptions(
       $("model-select"),
       lakeData.lakes[0].forecast.models,
@@ -265,6 +283,10 @@ async function loadLakes() {
       "svgp-gpc-history_physical-matern32-256",
     );
     filterLakes();
+    if (lakeNames["GLO_83.85335_28.69074"]) {
+      $("lake-select").value = "GLO_83.85335_28.69074";
+      renderLake();
+    }
     renderReliability();
     renderMetrics();
     $("lake-loading").hidden = true;
@@ -442,7 +464,7 @@ function renderLakeVisuals() {
   text(
     "map-selected-name",
     currentLake
-      ? `${currentLake.id} | ${currentLake.basin} basin`
+      ? `${lakeLabels.get(currentLake.id)} | ${currentLake.id} | ${currentLake.basin} basin`
       : "No lake selected",
   );
   const id = $("model-select").value;

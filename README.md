@@ -80,3 +80,12 @@ The Nepal outline is extracted from a pinned Natural Earth 1:50m Admin 0 dataset
 The scatter plot includes every evaluated lake and uses the selected regression model. Both axes share one scale; switching models may change the range. Optional symmetric-log axes use sign(x) \* log(1 + abs(x)/0.1) on proportional fractions and label ticks as percentages. Large outliers are never removed.
 
 Reliability uses ten equal-width probability bins, includes probability 1 in the final bin, and labels expansion as actual proportional change greater than zero. Empty bins are omitted; marker area is proportional to count above a minimum visible size. This is a descriptive held-out diagnostic, not recalibration or a guarantee of reliable probabilities.
+
+
+## Lake identity and names
+
+The GLO inventory has IDs and coordinates, not lake names. `data/lake-names.json` adds 67 community-mapped names from OpenStreetMap, retrieved 2026-09-16. These are not official inventory names or an authoritative gazetteer. Remaining records display "Name not verified"; this does not mean they have no name.
+
+Each accepted inventory coordinate falls inside exactly one named closed OSM water way. Generic descriptions (for example, "Glacial lake"), overlapping candidates, relation geometries, and proximity-only matches were excluded. English name tags are preferred where present; mapped names are otherwise preserved. The lookup includes direct source links and the source timestamp. `data/lake-name-boundaries.geojson` preserves the accepted source polygons for checking the matches with `node --test tests/lake-names.test.mjs`. The original forecast dataset is unchanged.
+
+The name lookup and boundary extract are derived from [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) and distributed under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). These files are a separate attribution-bearing dataset, not a relicensing of the original GLO inventory or model predictions. The browser uses the bundled lookup; no live geocoding service is required.

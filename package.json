@@ -6,7 +6,7 @@
   "description": "Interactive coursework companion: Nepal lake forecasts and explainable fuzzy control",
   "scripts": {
     "start": "node tools/serve.mjs",
-    "test": "node --test tests/controller.test.mjs tests/diagnostics.test.mjs",
+    "test": "node --test tests/controller.test.mjs tests/diagnostics.test.mjs tests/lake-names.test.mjs",
     "test:browser": "playwright test"
   },
   "devDependencies": {
